@@ -35,7 +35,10 @@ public class App {
         // Initialize default items
         initializeDefaultItems();
         
-        // Note: We'll allow users to add Pokémon through the interface
+        // Initialize default Pokémon
+        initializeDefaultPokemon();
+        
+        // Note: We'll allow users to add more Pokémon through the interface
     }
 
     /**
@@ -111,6 +114,27 @@ public class App {
                 "Evolves male Kirlia into Gallade, female Snorunt into Froslass.", 3000, 1500));
         items.add(new Item("Ice Stone", "Evolution Stone", "A stone that is cold to the touch.", 
                 "Evolves Pokémon like Alolan Vulpix, Galarian Darumaka, Eevee (into Glaceon)", 3000, 1500));
+    }
+
+    /**
+     * Initializes default Pokémon
+     */
+    private void initializeDefaultPokemon() {
+        Pokemon pikachu = new Pokemon(25, "Pikachu", Type.ELECTRIC, Type.NONE, 5, 25, 26, 26, 
+                35, 55, 40, 90);
+        pokemons.add(pikachu);
+        
+        Pokemon charmander = new Pokemon(4, "Charmander", Type.FIRE, Type.NONE, 5, 4, 5, 16, 
+                39, 52, 43, 65);
+        pokemons.add(charmander);
+        
+        Pokemon squirtle = new Pokemon(7, "Squirtle", Type.WATER, Type.NONE, 5, 7, 8, 16, 
+                44, 48, 65, 43);
+        pokemons.add(squirtle);
+        
+        Pokemon bulbasaur = new Pokemon(1, "Bulbasaur", Type.GRASS, Type.POISON, 5, 1, 2, 16, 
+                45, 49, 49, 45);
+        pokemons.add(bulbasaur);
     }
 
     /**

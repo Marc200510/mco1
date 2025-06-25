@@ -5,10 +5,10 @@
  */
 public class Move {
     /**
-     * Classification of moves (HM, TM, or normal move)
+     * Classification of moves (HM or TM)
      */
     public enum Classification {
-        HM, TM, NORMAL
+        HM, TM, NORMAL; // Keeping NORMAL for backward compatibility with existing moves
     }
     
     private int id;
