@@ -6,7 +6,7 @@ import java.util.Scanner;
  * Main application for the Pokédex system
  * Provides text-based menu system and all functionality
  * 
- * @author Your Name
+ * @author Jairus Theo Villafranca, Marc De Roca
  */
 public class App {
     private Scanner scanner;
@@ -38,7 +38,6 @@ public class App {
         // Initialize default Pokémon
         initializeDefaultPokemon();
         
-        // Note: We'll allow users to add more Pokémon through the interface
     }
 
     /**
@@ -141,11 +140,11 @@ public class App {
      * Starts the application
      */
     public void start() {
-        displayWelcomeMessage();
+        displayWelcomeMessage(); // shows the welcome banner
 
         boolean running = true;
         while (running) {
-            displayMainMenu();
+            displayMainMenu(); // shows the main menu
             int choice = getIntInput("Enter your choice: ");
 
             switch (choice) {
@@ -311,14 +310,14 @@ public class App {
     private void addPokemon() {
         System.out.println("\n=== ADD NEW POKÉMON ===");
 
-        // Get Pokédex Number
+        // get the Pokédex Number
         int pokedexNumber;
         boolean validPokedexNumber = false;
 
         while (!validPokedexNumber) {
             pokedexNumber = getIntInput("Enter Pokédex Number: ");
 
-            // Check if this Pokédex number already exists
+           // checks if pokédex number is already used
             boolean exists = false;
             for (Pokemon p : pokemons) {
                 if (p.getPokedexNumber() == pokedexNumber) {
@@ -329,11 +328,10 @@ public class App {
                 }
             }
 
-            if (!exists) {
-                // Get name
-                String name = getStringInput("Enter Name: ");
+            if (!exists) { //if its not used then ask for pokémon name
+                String name = getStringInput("Enter Name: "); 
                 
-                // Check for duplicate name
+                // checks if name is already used
                 boolean nameExists = false;
                 for (Pokemon p : pokemons) {
                     if (p.getName().equalsIgnoreCase(name)) {
@@ -344,14 +342,13 @@ public class App {
                 }
                 
                 if (nameExists) {
-                    // Continue the outer loop if name exists
-                    continue;
+                    continue; // if name exists, ask again
                 }
                 
-                // Name is valid, proceed with the rest of the data collection
+               // if pokedex number and name is valid, continue
                 validPokedexNumber = true;
 
-                // Get types
+                // shows available types
                 System.out.println("\nAvailable types:");
                 for (Type type : Type.values()) {
                     if (type != Type.NONE) {
@@ -359,7 +356,7 @@ public class App {
                     }
                 }
 
-                // Get primary type
+                // asks for primary type
                 Type type1 = null;
                 while (type1 == null) {
                     String typeStr = getStringInput("\nEnter Type 1: ");
@@ -374,7 +371,7 @@ public class App {
                     }
                 }
 
-                // Get secondary type (optional)
+                // asks for secondary type (optional)
                 Type type2 = Type.NONE;
                 String typeStr = getStringInput("Enter Type 2 (leave blank if none): ");
                 if (!typeStr.trim().isEmpty()) {
@@ -385,7 +382,7 @@ public class App {
                     }
                 }
 
-                // Get other attributes
+                // asks for other stats/attributes
                 int baseLevel;
                 do {
                     baseLevel = getIntInput("Enter Base Level (minimum 1): ");
@@ -402,7 +399,7 @@ public class App {
                 int defense = getIntInput("Enter Defense: ");
                 int speed = getIntInput("Enter Speed: ");
 
-                // --- Prompt for Move Set ---
+                // displays the initialized moves
                 List<Move> moveSet = new ArrayList<>();
                 if (!moves.isEmpty()) {
                     System.out.println("\nHere's the list of the available moves:");
@@ -410,7 +407,7 @@ public class App {
                         System.out.printf("%d. %s\n", i + 1, moves.get(i).getName());
                     }
 
-                    // Optionally, let user add moves (up to 4)
+                   // lets user pick from the initialized moves for the pokémon (up to 4)
                     while (moveSet.size() < 4) {
                         int moveChoice = getIntInput("Enter move number to add (or 0 to stop): ");
                         if (moveChoice == 0) break;
@@ -440,7 +437,7 @@ public class App {
                     System.out.println("No moves available. Create moves first.");
                 }
 
-                // --- Prompt for Held Item ---
+                // lets user pick an item for the pokémon
                 Item heldItem = null;
                 if (!items.isEmpty()) {
                     System.out.println("\nAvailable Items:");
@@ -472,19 +469,19 @@ public class App {
                     System.out.println("No items available.");
                 }
 
-                // Create and add the Pokémon
+                 // creates the pokémon and adds it to the list
                 Pokemon pokemon = new Pokemon(pokedexNumber, name, type1, type2, baseLevel,
                         evolvesFrom, evolvesTo, evolutionLevel, hp, attack, defense, speed);
                 
                 if (!moveSet.isEmpty()) {
-                    pokemon.setMoveSet(moveSet);
+                    pokemon.setMoveSet(moveSet); // sets the moves if any
                 }
                 
                 if (heldItem != null) {
-                    pokemon.setHeldItem(heldItem);
+                    pokemon.setHeldItem(heldItem); // sets the held item if any
                 }
-                
-                pokemons.add(pokemon);
+                 
+                pokemons.add(pokemon); //// adds the new pokémon to the list
                 System.out.println("SUCCESS: Pokémon added successfully!");
                 pressEnterToContinue();
             }
@@ -492,7 +489,7 @@ public class App {
     }
 
     /**
-     * Displays all Pokémon in a tabulated landscape format
+     * Displays all Pokémon
      */
     private void displayAllPokemon() {
         System.out.println("\n=== ALL POKÉMON ===");
@@ -505,39 +502,74 @@ public class App {
 
         System.out.println("Found " + pokemons.size() + " Pokémon:\n");
         
-        // Print the header for the table
+        // prints the header for the table
         System.out.println("+------+----------------+-------+-------+-------+----------+----------+-------+-----+--------+--------+-------+----------------+----------------+");
         System.out.printf("| %-4s | %-14s | %-5s | %-5s | %-5s | %-8s | %-8s | %-5s | %-3s | %-6s | %-6s | %-5s | %-14s | %-14s |\n", 
                 "#ID", "Name", "Type1", "Type2", "Level", "Evol.From", "Evol.To", "E.Lvl", "HP", "Attack", "Defense", "Speed", "Moves", "Held Item");
         System.out.println("+------+----------------+-------+-------+-------+----------+----------+-------+-----+--------+--------+-------+----------------+----------------+");
         
-        // Print each Pokémon as a row in the table
+        // prints each Pokémon as a row in the table
         for (Pokemon pokemon : pokemons) {
-            // Get secondary type or "---" if none
-            String type2 = pokemon.getType2() == Type.NONE ? "---" : pokemon.getType2().toString();
+            // Get secondary type
+            String type2;
+            if (pokemon.getType2() == Type.NONE) {
+                type2 = "---";
+            } else {
+                type2 = pokemon.getType2().toString();
+            }
             
-            // Format evolution information
-            String evolvesFrom = pokemon.getEvolvesFrom() > 0 ? "#" + pokemon.getEvolvesFrom() : "---";
-            String evolvesTo = pokemon.getEvolvesTo() > 0 ? "#" + pokemon.getEvolvesTo() : "---";
-            String evolutionLevel = pokemon.getEvolutionLevel() > 0 ? String.valueOf(pokemon.getEvolutionLevel()) : "---";
+            // format evolution information
+            String evolvesFrom;
+            if (pokemon.getEvolvesFrom() > 0) {
+                evolvesFrom = "#" + pokemon.getEvolvesFrom();
+            } else {
+                evolvesFrom = "---";
+            }
             
-            // Get move names as a comma-separated list
+            String evolvesTo;
+            if (pokemon.getEvolvesTo() > 0) {
+                evolvesTo = "#" + pokemon.getEvolvesTo();
+            } else {
+                evolvesTo = "---";
+            }
+            
+            String evolutionLevel;
+            if (pokemon.getEvolutionLevel() > 0) {
+                evolutionLevel = String.valueOf(pokemon.getEvolutionLevel());
+            } else {
+                evolutionLevel = "---";
+            }
+            
+            // gets move names as a comma-separated list
             List<Move> pokemonMoves = pokemon.getMoveSet();
             String movesList = "None";
+            
             if (!pokemonMoves.isEmpty()) {
                 StringBuilder movesBuilder = new StringBuilder();
                 for (int i = 0; i < pokemonMoves.size(); i++) {
-                    if (i > 0) movesBuilder.append(",");
+                    if (i > 0) {
+                        movesBuilder.append(",");
+                    }
                     movesBuilder.append(pokemonMoves.get(i).getName());
                 }
                 movesList = movesBuilder.toString();
             }
             
-            // Format held item
+            // formats the held item
             Item heldItem = pokemon.getHeldItem();
-            String heldItemStr = (heldItem != null) ? heldItem.getName() : "None";
+            String heldItemStr;
+            if (heldItem != null) {
+                heldItemStr = heldItem.getName();
+            } else {
+                heldItemStr = "None";
+            }
             
-            // Print the row with all attributes
+            // format moves list if too long
+            if (movesList.length() > 14) {
+                movesList = movesList.substring(0, 11) + "...";
+            }
+            
+            // prints the row with all attributes
             System.out.printf("| #%-3d | %-14s | %-5s | %-5s | %-5d | %-8s | %-8s | %-5s | %-3d | %-6d | %-6d | %-5d | %-14s | %-14s |\n",
                     pokemon.getPokedexNumber(),
                     pokemon.getName(),
@@ -551,7 +583,7 @@ public class App {
                     pokemon.getAttack(),
                     pokemon.getDefense(),
                     pokemon.getSpeed(),
-                    movesList.length() > 14 ? movesList.substring(0, 11) + "..." : movesList,
+                    movesList,
                     heldItemStr);
         }
         
@@ -599,7 +631,7 @@ public class App {
         
         for (Pokemon pokemon : pokemons) {
             if (pokemon.getName().toLowerCase().contains(name.toLowerCase())) {
-                results.add(pokemon);
+                results.add(pokemon); // adds matching pokémon to results
             }
         }
 
@@ -643,8 +675,8 @@ public class App {
         List<Pokemon> results = new ArrayList<>();
         for (Pokemon pokemon : pokemons) {
             if (pokemon.getType1() == searchType || pokemon.getType2() == searchType) {
-                results.add(pokemon);
-            }
+                results.add(pokemon); // adds matching pokémon to results
+            } 
         }
 
         if (results.isEmpty()) {
@@ -667,12 +699,12 @@ public class App {
      * Searches for Pokémon by Pokédex number
      */
     private void searchPokemonByNumber() {
-        int number = getIntInput("Enter Pokédex Number to search: ");
+        int number = getIntInput("Enter Pokédex Number to search: "); // asks for pokédex number
         
         Pokemon result = null;
         for (Pokemon pokemon : pokemons) {
             if (pokemon.getPokedexNumber() == number) {
-                result = pokemon;
+                result = pokemon; // finds the pokémon with that number
                 break;
             }
         }
@@ -697,14 +729,13 @@ public class App {
     private void addMove() {
         System.out.println("\n=== ADD NEW MOVE ===");
 
-        // Generate a unique ID
-        int id = moves.size() + 1;
         
-        // Get move details
+        int id = moves.size() + 1; // assigns a new id for the move (this generates a unique id)
+        
         String name = getStringInput("Enter Name: ");
         
-        // Check for duplicate name
-        for (Move m : moves) {
+
+        for (Move m : moves) {  // loop that checks for duplicate name
             if (m.getName().equalsIgnoreCase(name)) {
                 System.out.println("ERROR: Move with this name already exists!");
                 pressEnterToContinue();
@@ -712,18 +743,19 @@ public class App {
             }
         }
         
-        String description = getStringInput("Enter Description: ");
+        String description = getStringInput("Enter Description: "); 
 
         System.out.println("Classifications: HM, TM, NORMAL");
         String classificationStr = getStringInput("Enter Classification: ");
         Move.Classification classification;
         try {
-            classification = Move.Classification.valueOf(classificationStr.toUpperCase());
-        } catch (IllegalArgumentException e) {
+            classification = Move.Classification.valueOf(classificationStr.toUpperCase()); // checks for valid classification
+        } catch (IllegalArgumentException e) { //catches invalid classification, then assigns it to NORMAL
             System.out.println("Invalid classification. Using NORMAL as default.");
             classification = Move.Classification.NORMAL;
         }
 
+         // shows available types
         System.out.println("\nAvailable types:");
         for (Type type : Type.values()) {
             if (type != Type.NONE) {
@@ -740,18 +772,18 @@ public class App {
                 moveType = Type.NORMAL;
             }
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid type. Using NORMAL as default.");
+            System.out.println("Invalid type. Using NORMAL as default."); //catches invalid type, then assigns it to NORMAL
             moveType = Type.NORMAL;
         }
         
         System.out.println("\nKind options: Physical, Special, Status");
-        String kind = getStringInput("Enter Kind: ");
+        String kind = getStringInput("Enter Kind: "); 
         
         int power = getIntInput("Enter Power (0 for status moves): ");
         String accuracy = getStringInput("Enter Accuracy (e.g., 100%, 85%): ");
         int pp = getIntInput("Enter PP (Power Points): ");
 
-        // Create and add the move
+        // creates the move and adds it to the list
         Move move = new Move(id, name, description, classification, moveType, kind, power, accuracy, pp);
         moves.add(move);
         
@@ -910,11 +942,12 @@ public class App {
      * Searches for moves by classification
      */
     private void searchMovesByClassification() {
+        // shows available classifications
         System.out.println("Classifications: HM, TM, NORMAL");
         String classificationStr = getStringInput("Enter move classification to search: ");
-        Move.Classification searchClassification;
+        Move.Classification searchClassification; // initializes the search classification
         try {
-            searchClassification = Move.Classification.valueOf(classificationStr.toUpperCase());
+            searchClassification = Move.Classification.valueOf(classificationStr.toUpperCase()); // checks for valid classification
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid classification. Search cancelled.");
             pressEnterToContinue();
@@ -922,9 +955,9 @@ public class App {
         }
         
         List<Move> results = new ArrayList<>();
-        for (Move move : moves) {
+        for (Move move : moves) { // loops through all moves, then checks if the classification matches the search classification
             if (move.getClassification() == searchClassification) {
-                results.add(move);
+                results.add(move); // adds matching move to results
             }
         }
 
@@ -976,17 +1009,22 @@ public class App {
      * @param category The category to display
      */
     private void displayItemsByCategory(String category) {
+        // Create a list to hold items of the specified category
         List<Item> categoryItems = new ArrayList<>();
+        
+        // Find items of the specified category
         for (Item item : items) {
             if (item.getCategory().equals(category)) {
                 categoryItems.add(item);
             }
         }
         
+        // If no items found in the category, return early
         if (categoryItems.isEmpty()) {
             return;
         }
         
+        // Print table header
         System.out.println(
                 "+----------------------+---------------+--------------------------------+------------+------------+");
         System.out.printf("| %-20s | %-13s | %-30s | %-10s | %-10s |\n",
@@ -994,17 +1032,26 @@ public class App {
         System.out.println(
                 "+----------------------+---------------+--------------------------------+------------+------------+");
 
+        // Print each item in the category
         for (Item item : categoryItems) {
-            // Truncate description if too long
+            // if the item description is too long, we truncate it
             String description = item.getDescription();
             if (description.length() > 30) {
                 description = description.substring(0, 27) + "...";
             }
 
-            // Format prices with commas for readability
-            String buyPrice = item.getBuyingPrice() == 0 ? "Not sold" : "₽" + String.format("%,d", item.getBuyingPrice());
+            // formats buying price
+            String buyPrice;
+            if (item.getBuyingPrice() == 0) {
+                buyPrice = "Not sold";
+            } else {
+                buyPrice = "₽" + String.format("%,d", item.getBuyingPrice());
+            }
+            
+            // formats selling price
             String sellPrice = "₽" + String.format("%,d", item.getSellingPrice());
 
+            // print the item row
             System.out.printf("| %-20s | %-13s | %-30s | %-10s | %-10s |\n",
                     item.getName(),
                     item.getCategory(),
@@ -1012,6 +1059,8 @@ public class App {
                     buyPrice,
                     sellPrice);
         }
+        
+        // print table footer
         System.out.println(
                 "+----------------------+---------------+--------------------------------+------------+------------+");
     }
@@ -1047,16 +1096,16 @@ public class App {
      * Searches for items by name
      */
     private void searchItemsByName() {
-        String name = getStringInput("Enter item name to search: ");
-        List<Item> results = new ArrayList<>();
+        String name = getStringInput("Enter item name to search: "); 
+        List<Item> results = new ArrayList<>(); // initializes the results list
         
         for (Item item : items) {
             if (item.getName().toLowerCase().contains(name.toLowerCase())) {
-                results.add(item);
+                results.add(item); // adds matching item to results
             }
         }
 
-        if (results.isEmpty()) {
+        if (results.isEmpty()) { // checks if the results list is empty
             System.out.println("No items found with that name.");
             pressEnterToContinue();
             return;
@@ -1076,17 +1125,18 @@ public class App {
      * Searches for items by category
      */
     private void searchItemsByCategory() {
+        // list of common categories
         System.out.println("Common categories: Vitamin, Evolution Stone, Feather, Leveling Item");
         String category = getStringInput("Enter item category to search: ");
         List<Item> results = new ArrayList<>();
         
         for (Item item : items) {
             if (item.getCategory().toLowerCase().contains(category.toLowerCase())) {
-                results.add(item);
+                results.add(item); // adds matching item to results
             }
         }
 
-        if (results.isEmpty()) {
+        if (results.isEmpty()) { // checks if the results list is empty
             System.out.println("No items found in that category.");
             pressEnterToContinue();
             return;
@@ -1109,16 +1159,16 @@ public class App {
      * @return The integer input
      */
     private int getIntInput(String prompt) {
-        System.out.print(prompt);
+        System.out.print(prompt); 
 
         while (!scanner.hasNextInt()) {
             System.out.println("ERROR: Please enter a valid number.");
-            scanner.next(); // Consume the invalid input
+            scanner.next(); 
             System.out.print(prompt);
         }
 
         int input = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline
+        scanner.nextLine(); 
         return input;
     }
 

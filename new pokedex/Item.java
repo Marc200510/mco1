@@ -1,7 +1,7 @@
 /**
- * Represents an item that can be used by trainers or held by Pokémon
+ * Represents an item that can be used by trainers or held by Pokémon.
  * 
- * @author Your Name
+ * @author Jairus Theo Villafranca, Marc De Roca
  */
 public class Item {
     private String name;
@@ -10,9 +10,9 @@ public class Item {
     private String effect;
     private int buyingPrice;
     private int sellingPrice;
-    
+
     /**
-     * Creates a new item with the specified attributes
+     * Creates a new item with the specified attributes.
      * 
      * @param name The item name
      * @param category The item category
@@ -30,32 +30,59 @@ public class Item {
         this.buyingPrice = buyingPrice;
         this.sellingPrice = sellingPrice;
     }
-    
-    // Getters
+
+    /**
+     * Gets the item name.
+     * @return The item name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the item category.
+     * @return The item category
+     */
     public String getCategory() {
         return category;
     }
 
+    /**
+     * Gets the item description.
+     * @return The item description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Gets the item effect.
+     * @return The item effect
+     */
     public String getEffect() {
         return effect;
     }
 
+    /**
+     * Gets the buying price.
+     * @return The buying price
+     */
     public int getBuyingPrice() {
         return buyingPrice;
     }
 
+    /**
+     * Gets the selling price.
+     * @return The selling price
+     */
     public int getSellingPrice() {
         return sellingPrice;
     }
-    
+
+    /**
+     * Returns a string representation of the item.
+     * @return String representation
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -64,7 +91,6 @@ public class Item {
         sb.append(String.format("Effect: %s\n", effect));
         sb.append(String.format("Price: Buy ₽%,d / Sell ₽%,d\n", 
                                buyingPrice, sellingPrice));
-        
         return sb.toString();
     }
 }

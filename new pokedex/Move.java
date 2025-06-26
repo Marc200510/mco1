@@ -1,16 +1,21 @@
 /**
- * Represents a move that can be learned by Pokémon
+ * Represents a move that can be learned by Pokémon.
  * 
- * @author Your Name
+ * @author Jairus Theo Villafranca, Marc De Roca
  */
 public class Move {
     /**
-     * Classification of moves (HM or TM)
+     * Classification of moves (HM, TM, NORMAL).
      */
     public enum Classification {
-        HM, TM, NORMAL; // Keeping NORMAL for backward compatibility with existing moves
+        /** Hidden Machine move. */
+        HM,
+        /** Technical Machine move. */
+        TM,
+        /** Normal move (not HM or TM). */
+        NORMAL
     }
-    
+
     private int id;
     private String name;
     private String description;
@@ -20,9 +25,9 @@ public class Move {
     private int power;
     private String accuracy;
     private int pp;
-    
+
     /**
-     * Creates a new move with the specified attributes
+     * Creates a new move with the specified attributes.
      * 
      * @param id The move ID
      * @param name The move name
@@ -46,44 +51,83 @@ public class Move {
         this.accuracy = accuracy;
         this.pp = pp;
     }
-    
-    // Getters
+
+    /**
+     * Gets the move ID.
+     * @return The move ID
+     */
     public int getId() {
         return id;
     }
-    
+
+    /**
+     * Gets the move name.
+     * @return The move name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the move description.
+     * @return The move description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Gets the move classification.
+     * @return The move classification
+     */
     public Classification getClassification() {
         return classification;
     }
 
+    /**
+     * Gets the move type.
+     * @return The move type
+     */
     public Type getType() {
         return type;
     }
-    
+
+    /**
+     * Gets the move kind (Physical, Special, Status).
+     * @return The move kind
+     */
     public String getKind() {
         return kind;
     }
-    
+
+    /**
+     * Gets the move power.
+     * @return The move power
+     */
     public int getPower() {
         return power;
     }
-    
+
+    /**
+     * Gets the move accuracy.
+     * @return The move accuracy
+     */
     public String getAccuracy() {
         return accuracy;
     }
-    
+
+    /**
+     * Gets the move PP (Power Points).
+     * @return The move PP
+     */
     public int getPP() {
         return pp;
     }
-    
+
+    /**
+     * Returns a string representation of the move.
+     * @return String representation
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -91,7 +135,6 @@ public class Move {
         sb.append(String.format("Type: %s (%s)\n", type, kind));
         sb.append(String.format("Power: %d | Accuracy: %s | PP: %d\n", power, accuracy, pp));
         sb.append(String.format("Description: %s\n", description));
-        
         return sb.toString();
     }
 }
