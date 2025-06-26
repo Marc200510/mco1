@@ -503,10 +503,10 @@ public class App {
         System.out.println("Found " + pokemons.size() + " Pokémon:\n");
         
         // prints the header for the table
-        System.out.println("+------+----------------+-------+-------+-------+----------+----------+-------+-----+--------+--------+-------+----------------+----------------+");
-        System.out.printf("| %-4s | %-14s | %-5s | %-5s | %-5s | %-8s | %-8s | %-5s | %-3s | %-6s | %-6s | %-5s | %-14s | %-14s |\n", 
-                "#ID", "Name", "Type1", "Type2", "Level", "Evol.From", "Evol.To", "E.Lvl", "HP", "Attack", "Defense", "Speed", "Moves", "Held Item");
-        System.out.println("+------+----------------+-------+-------+-------+----------+----------+-------+-----+--------+--------+-------+----------------+----------------+");
+        System.out.println("+-----+--------------+-----------+-----------+-------+-----------+-----------+-------+-----+--------+--------+--------+--------------+--------------+");
+        System.out.printf("| %-3s | %-12s | %-9s | %-9s | %-5s | %-9s | %-9s | %-5s | %-3s | %-6s | %-7s | %-6s | %-12s | %-12s |\n",
+            "#ID", "Name", "Type1", "Type2", "Level", "Evol.From", "Evol.To", "E.Lvl", "HP", "Attack", "Defense", "Speed", "Moves", "Held Item");
+        System.out.println("+-----+--------------+-----------+-----------+-------+-----------+-----------+-------+-----+--------+--------+--------+--------------+--------------+");
         
         // prints each Pokémon as a row in the table
         for (Pokemon pokemon : pokemons) {
@@ -517,77 +517,46 @@ public class App {
             } else {
                 type2 = pokemon.getType2().toString();
             }
-            
             // format evolution information
-            String evolvesFrom;
-            if (pokemon.getEvolvesFrom() > 0) {
-                evolvesFrom = "#" + pokemon.getEvolvesFrom();
-            } else {
-                evolvesFrom = "---";
-            }
-            
-            String evolvesTo;
-            if (pokemon.getEvolvesTo() > 0) {
-                evolvesTo = "#" + pokemon.getEvolvesTo();
-            } else {
-                evolvesTo = "---";
-            }
-            
-            String evolutionLevel;
-            if (pokemon.getEvolutionLevel() > 0) {
-                evolutionLevel = String.valueOf(pokemon.getEvolutionLevel());
-            } else {
-                evolutionLevel = "---";
-            }
-            
+            String evolvesFrom = (pokemon.getEvolvesFrom() > 0) ? ("#" + pokemon.getEvolvesFrom()) : "---";
+            String evolvesTo = (pokemon.getEvolvesTo() > 0) ? ("#" + pokemon.getEvolvesTo()) : "---";
+            String evolutionLevel = (pokemon.getEvolutionLevel() > 0) ? String.valueOf(pokemon.getEvolutionLevel()) : "---";
             // gets move names as a comma-separated list
             List<Move> pokemonMoves = pokemon.getMoveSet();
             String movesList = "None";
-            
             if (!pokemonMoves.isEmpty()) {
                 StringBuilder movesBuilder = new StringBuilder();
                 for (int i = 0; i < pokemonMoves.size(); i++) {
-                    if (i > 0) {
-                        movesBuilder.append(",");
-                    }
+                    if (i > 0) movesBuilder.append(",");
                     movesBuilder.append(pokemonMoves.get(i).getName());
                 }
                 movesList = movesBuilder.toString();
             }
-            
             // formats the held item
             Item heldItem = pokemon.getHeldItem();
-            String heldItemStr;
-            if (heldItem != null) {
-                heldItemStr = heldItem.getName();
-            } else {
-                heldItemStr = "None";
-            }
-            
+            String heldItemStr = (heldItem != null) ? heldItem.getName() : "None";
             // format moves list if too long
-            if (movesList.length() > 14) {
-                movesList = movesList.substring(0, 11) + "...";
+            if (movesList.length() > 12) {
+                movesList = movesList.substring(0, 9) + "...";
             }
-            
             // prints the row with all attributes
-            System.out.printf("| #%-3d | %-14s | %-5s | %-5s | %-5d | %-8s | %-8s | %-5s | %-3d | %-6d | %-6d | %-5d | %-14s | %-14s |\n",
-                    pokemon.getPokedexNumber(),
-                    pokemon.getName(),
-                    pokemon.getType1().toString(),
-                    type2,
-                    pokemon.getBaseLevel(),
-                    evolvesFrom,
-                    evolvesTo,
-                    evolutionLevel,
-                    pokemon.getHp(),
-                    pokemon.getAttack(),
-                    pokemon.getDefense(),
-                    pokemon.getSpeed(),
-                    movesList,
-                    heldItemStr);
+            System.out.printf("| %-3s | %-12s | %-9s | %-9s | %-5d | %-9s | %-9s | %-5s | %-3d | %-6d | %-7d | %-6d | %-12s | %-12s |\n",
+                "#" + pokemon.getPokedexNumber(),
+                pokemon.getName(),
+                pokemon.getType1().toString(),
+                type2,
+                pokemon.getBaseLevel(),
+                evolvesFrom,
+                evolvesTo,
+                evolutionLevel,
+                pokemon.getHp(),
+                pokemon.getAttack(),
+                pokemon.getDefense(),
+                pokemon.getSpeed(),
+                movesList,
+                heldItemStr);
         }
-        
-        System.out.println("+------+----------------+-------+-------+-------+----------+----------+-------+-----+--------+--------+-------+----------------+----------------+");
+        System.out.println("+-----+--------------+-----------+-----------+-------+-----------+-----------+-------+-----+--------+--------+--------+--------------+--------------+");
         pressEnterToContinue();
     }
 
@@ -805,20 +774,17 @@ public class App {
 
         System.out.println("Found " + moves.size() + " moves:");
         System.out.println(
-                "-----------------------------------------------------------------------------------------------------------");
-        System.out.printf("| %-4s | %-15s | %-10s | %-10s | %-6s | %-9s | %-4s | %-30s |\n",
+                "-------------------------------------------------------------------------------------------------------------");
+        System.out.printf("| %-2s | %-15s | %-7s | %-8s | %-6s | %-8s | %-2s | %-40s |\n",
                 "ID", "Name", "Type", "Kind", "Power", "Accuracy", "PP", "Description");
         System.out.println(
-                "-----------------------------------------------------------------------------------------------------------");
+                "-------------------------------------------------------------------------------------------------------------");
 
         for (Move move : moves) {
-            // Truncate description if too long
+            // Use the full description without truncation
             String description = move.getDescription();
-            if (description.length() > 30) {
-                description = description.substring(0, 27) + "...";
-            }
 
-            System.out.printf("| %-4d | %-15s | %-10s | %-10s | %-6d | %-9s | %-4d | %-30s |\n",
+            System.out.printf("| %-2d | %-15s | %-7s | %-8s | %-6d | %-8s | %-2d | %-40s |\n",
                     move.getId(),
                     move.getName(),
                     move.getType(),
@@ -829,7 +795,7 @@ public class App {
                     description);
         }
         System.out.println(
-                "-----------------------------------------------------------------------------------------------------------");
+                "-------------------------------------------------------------------------------------------------------------");
 
         pressEnterToContinue();
     }
@@ -1009,70 +975,86 @@ public class App {
      * @param category The category to display
      */
     private void displayItemsByCategory(String category) {
-        // Create a list to hold items of the specified category
+        // creates a list to hold items of the specified category
         List<Item> categoryItems = new ArrayList<>();
         
-        // Find items of the specified category
+        // finds items of the specified category
         for (Item item : items) {
             if (item.getCategory().equals(category)) {
                 categoryItems.add(item);
             }
         }
         
-        // If no items found in the category, return early
+        // if no items found in the category, return early
         if (categoryItems.isEmpty()) {
             return;
         }
         
-        // Print table header
-        System.out.println(
-                "+----------------------+---------------+--------------------------------+--------------------------------+------------+------------+");
-        System.out.printf("| %-20s | %-13s | %-30s | %-30s | %-10s | %-10s |\n",
-                "Name", "Category", "Description", "Effect", "Buy Price", "Sell Price");
-        System.out.println(
-                "+----------------------+---------------+--------------------------------+--------------------------------+------------+------------+");
+        
+        if (category.equals("Evolution Stone")) {
+            System.out.println("+--------------------+-----------------+----------------+------------+----------------------------------------------------------------------+");
+            System.out.printf("| %-18s | %-15s | %-14s | %-10s | %-68s |\n",
+                    "Name", "Category", "Buy Price", "Sell Price", "Effect");
+            System.out.println("+--------------------+-----------------+----------------+------------+----------------------------------------------------------------------+");
+            
+            // prints each evolution stone in the category
+            for (Item item : categoryItems) {
+                // format buying prices
+                String buyPrice;
+                if (item.getName().equals("Moon Stone")) {
+                    buyPrice = "Not sold";
+                } else {
+                    buyPrice = "₱3,000-₱5,000";
+                }
+                
+                // formats selling price
+                String sellPrice = "₱" + String.format("%,d", item.getSellingPrice());
 
-        // Print each item in the category
-        for (Item item : categoryItems) {
-            // if the item description is too long, we truncate it
-            String description = item.getDescription();
-            if (description.length() > 30) {
-                description = description.substring(0, 27) + "...";
+                // print evolution stone with adjusted column widths to match the screenshot
+                System.out.printf("| %-18s | %-15s | %-14s | %-10s | %-68s |\n",
+                        item.getName(),
+                        item.getCategory(),
+                        buyPrice,
+                        sellPrice,
+                        item.getEffect());
             }
             
-            // if the item effect is too long, truncate it
-            String effect = item.getEffect();
-            if (effect.length() > 30) {
-                effect = effect.substring(0, 27) + "...";
-            }
+            // adds a line at the end of the evolution stones table
+            System.out.println("+--------------------+-----------------+----------------+------------+----------------------------------------------------------------------+");
+        } else {
+            // regular formatting for other categories
+            System.out.println("+----------------------+---------------+------------+------------+-----------------------------------------------------------------+");
+            System.out.printf("| %-20s | %-13s | %-10s | %-10s | %-63s |\n",
+                    "Name", "Category", "Buy Price", "Sell Price", "Effect");
+            System.out.println("+----------------------+---------------+------------+------------+-----------------------------------------------------------------+");
 
-            // formats buying price
-            String buyPrice;
-            if (item.getBuyingPrice() == 0) {
-                buyPrice = "Not sold";
-            } else if (item.getCategory().equals("Evolution Stone") && item.getBuyingPrice() > 0) {
-                // Show price range for evolution stones
-                buyPrice = "₽3,000-₽5,000";
-            } else {
-                buyPrice = "₽" + String.format("%,d", item.getBuyingPrice());
+            // prints each item in the category
+            for (Item item : categoryItems) {
+                // Format buying price
+                String buyPrice;
+                if (item.getBuyingPrice() == 0) {
+                    buyPrice = "Not sold";
+                } else {
+                    buyPrice = "₱" + String.format("%,d", item.getBuyingPrice());
+                }
+                
+                // formats selling price
+                String sellPrice = "₱" + String.format("%,d", item.getSellingPrice());
+
+                // prints item information
+                System.out.printf("| %-20s | %-13s | %-10s | %-10s | %-63s |\n",
+                        item.getName(),
+                        item.getCategory(),
+                        buyPrice,
+                        sellPrice,
+                        item.getEffect());
             }
             
-            // formats selling price
-            String sellPrice = "₽" + String.format("%,d", item.getSellingPrice());
-
-            // print the item row
-            System.out.printf("| %-20s | %-13s | %-30s | %-30s | %-10s | %-10s |\n",
-                    item.getName(),
-                    item.getCategory(),
-                    description,
-                    effect,
-                    buyPrice,
-                    sellPrice);
+            // line at the end of the category listings
+            System.out.println("+----------------------+---------------+------------+------------+-----------------------------------------------------------------+");
         }
         
-        // print table footer
-        System.out.println(
-                "+----------------------+---------------+--------------------------------+--------------------------------+------------+------------+");
+        System.out.println();
     }
 
     /**
