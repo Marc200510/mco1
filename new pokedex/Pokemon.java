@@ -193,39 +193,6 @@ public class Pokemon {
     }
 
     /**
-     * Adds a move to the move set.
-     * @param move The move to add
-     */
-    public void addMoveToSet(Move move) {
-        moveSet.add(move);
-    }
-
-    /**
-     * Removes a move from the move set by index.
-     * @param moveIndex The index of the move to remove
-     */
-    public void removeMoveFromSet(int moveIndex) {
-        moveSet.remove(moveIndex);
-    }
-
-    /**
-     * Gets the size of the move set.
-     * @return The number of moves in the move set
-     */
-    public int getMoveSetSize() {
-        return moveSet.size();
-    }
-
-    /**
-     * Gets the move at the specified index.
-     * @param index The index of the move
-     * @return The move at the given index
-     */
-    public Move getMoveAt(int index) {
-        return moveSet.get(index);
-    }
-
-    /**
      * Returns a string representation of the Pokémon.
      * @return String representation
      */

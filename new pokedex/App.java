@@ -94,25 +94,25 @@ public class App {
         
         // Add evolution stones
         items.add(new Item("Fire Stone", "Evolution Stone", "A stone that radiates heat.", 
-                "Evolves Pokémon like Vulpix, Growlithe, Eevee (into Flareon), etc.", 3000, 1500));
+                "Evolves Pokémon like Vulpix, Growlithe, Eevee (into Flareon), etc.", 5000, 1500));
         items.add(new Item("Water Stone", "Evolution Stone", "A stone with a blue, watery appearance.", 
-                "Evolves Pokémon like Poliwhirl, Shellder, Eevee (into Vaporeon), etc.", 3000, 1500));
+                "Evolves Pokémon like Poliwhirl, Shellder, Eevee (into Vaporeon), etc.", 5000, 1500));
         items.add(new Item("Thunder Stone", "Evolution Stone", "A stone that sparkles with electricity.", 
-                "Evolves Pokémon like Pikachu, Eevee (into Jolteon), Eelektrik, etc.", 3000, 1500));
+                "Evolves Pokémon like Pikachu, Eevee (into Jolteon), Eelektrik, etc.", 5000, 1500));
         items.add(new Item("Leaf Stone", "Evolution Stone", "A stone with a leaf pattern.", 
-                "Evolves Pokémon like Gloom, Weepinbell, Exeggcute, etc.", 3000, 1500));
+                "Evolves Pokémon like Gloom, Weepinbell, Exeggcute, etc.", 5000, 1500));
         items.add(new Item("Moon Stone", "Evolution Stone", "A stone that glows faintly in the moonlight.", 
                 "Evolves Pokémon like Nidorina, Clefairy, Jigglypuff, etc.", 0, 1500));
         items.add(new Item("Sun Stone", "Evolution Stone", "A stone that glows like the sun.", 
-                "Evolves Pokémon like Gloom (into Bellossom), Sunkern, Cottonee, etc.", 3000, 1500));
+                "Evolves Pokémon like Gloom (into Bellossom), Sunkern, Cottonee, etc.", 5000, 1500));
         items.add(new Item("Shiny Stone", "Evolution Stone", "A stone that sparkles brightly.", 
-                "Evolves Pokémon like Togetic, Roselia, Minccino, etc.", 3000, 1500));
+                "Evolves Pokémon like Togetic, Roselia, Minccino, etc.", 5000, 1500));
         items.add(new Item("Dusk Stone", "Evolution Stone", "A dark stone that is ominous in appearance.", 
-                "Evolves Pokémon like Murkrow, Misdreavus, Doublade, etc.", 3000, 1500));
+                "Evolves Pokémon like Murkrow, Misdreavus, Doublade, etc.", 5000, 1500));
         items.add(new Item("Dawn Stone", "Evolution Stone", "A stone that sparkles like the morning sky.", 
-                "Evolves male Kirlia into Gallade, female Snorunt into Froslass.", 3000, 1500));
+                "Evolves male Kirlia into Gallade, female Snorunt into Froslass.", 5000, 1500));
         items.add(new Item("Ice Stone", "Evolution Stone", "A stone that is cold to the touch.", 
-                "Evolves Pokémon like Alolan Vulpix, Galarian Darumaka, Eevee (into Glaceon)", 3000, 1500));
+                "Evolves Pokémon like Alolan Vulpix, Galarian Darumaka, Eevee (into Glaceon)", 5000, 1500));
     }
 
     /**
@@ -1026,11 +1026,11 @@ public class App {
         
         // Print table header
         System.out.println(
-                "+----------------------+---------------+--------------------------------+------------+------------+");
-        System.out.printf("| %-20s | %-13s | %-30s | %-10s | %-10s |\n",
-                "Name", "Category", "Description", "Buy Price", "Sell Price");
+                "+----------------------+---------------+--------------------------------+--------------------------------+------------+------------+");
+        System.out.printf("| %-20s | %-13s | %-30s | %-30s | %-10s | %-10s |\n",
+                "Name", "Category", "Description", "Effect", "Buy Price", "Sell Price");
         System.out.println(
-                "+----------------------+---------------+--------------------------------+------------+------------+");
+                "+----------------------+---------------+--------------------------------+--------------------------------+------------+------------+");
 
         // Print each item in the category
         for (Item item : categoryItems) {
@@ -1039,11 +1039,20 @@ public class App {
             if (description.length() > 30) {
                 description = description.substring(0, 27) + "...";
             }
+            
+            // if the item effect is too long, truncate it
+            String effect = item.getEffect();
+            if (effect.length() > 30) {
+                effect = effect.substring(0, 27) + "...";
+            }
 
             // formats buying price
             String buyPrice;
             if (item.getBuyingPrice() == 0) {
                 buyPrice = "Not sold";
+            } else if (item.getCategory().equals("Evolution Stone") && item.getBuyingPrice() > 0) {
+                // Show price range for evolution stones
+                buyPrice = "₽3,000-₽5,000";
             } else {
                 buyPrice = "₽" + String.format("%,d", item.getBuyingPrice());
             }
@@ -1052,17 +1061,18 @@ public class App {
             String sellPrice = "₽" + String.format("%,d", item.getSellingPrice());
 
             // print the item row
-            System.out.printf("| %-20s | %-13s | %-30s | %-10s | %-10s |\n",
+            System.out.printf("| %-20s | %-13s | %-30s | %-30s | %-10s | %-10s |\n",
                     item.getName(),
                     item.getCategory(),
                     description,
+                    effect,
                     buyPrice,
                     sellPrice);
         }
         
         // print table footer
         System.out.println(
-                "+----------------------+---------------+--------------------------------+------------+------------+");
+                "+----------------------+---------------+--------------------------------+--------------------------------+------------+------------+");
     }
 
     /**

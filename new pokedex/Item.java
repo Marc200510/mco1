@@ -84,13 +84,13 @@ public class Item {
      * @return String representation
      */
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
+    public String toString() { 
+        StringBuilder sb = new StringBuilder(); 
         sb.append(String.format("Item: %s (%s)\n", name, category));
         sb.append(String.format("Description: %s\n", description));
         sb.append(String.format("Effect: %s\n", effect));
         sb.append(String.format("Price: Buy ₽%,d / Sell ₽%,d\n", 
                                buyingPrice, sellingPrice));
-        return sb.toString();
+        return sb.toString(); //the system converts it to a string then stores it
     }
 }
