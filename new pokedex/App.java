@@ -46,24 +46,25 @@ public class App {
     private void initializeDefaultMoves() {
         // Add some common moves
         Move tackle = new Move(1, "Tackle", "Deals damage with no additional effect.", 
-                Move.Classification.NORMAL, Type.NORMAL, "Physical", 40, "100%", 35);
+                Move.Classification.NORMAL, Type.NORMAL, Type.NONE, "Physical", 40, "100%", 35);
         moves.add(tackle);
         
         Move growl = new Move(2, "Growl", "Lowers the opponent's Attack stat.", 
-                Move.Classification.NORMAL, Type.NORMAL, "Status", 0, "100%", 40);
+                Move.Classification.NORMAL, Type.NORMAL, Type.NONE, "Status", 0, "100%", 40);
         moves.add(growl);
         
         Move ember = new Move(3, "Ember", "May inflict a burn.", 
-                Move.Classification.NORMAL, Type.FIRE, "Special", 40, "100%", 25);
+                Move.Classification.NORMAL, Type.FIRE, Type.NONE, "Special", 40, "100%", 25);
         moves.add(ember);
         
         Move waterGun = new Move(4, "Water Gun", "Deals damage with no additional effect.", 
-                Move.Classification.NORMAL, Type.WATER, "Special", 40, "100%", 25);
+                Move.Classification.NORMAL, Type.WATER, Type.NONE, "Special", 40, "100%", 25);
         moves.add(waterGun);
         
         Move vineWhip = new Move(5, "Vine Whip", "Deals damage with no additional effect.", 
-                Move.Classification.NORMAL, Type.GRASS, "Physical", 45, "100%", 25);
+                Move.Classification.NORMAL, Type.GRASS, Type.NONE, "Physical", 45, "100%", 25);
         moves.add(vineWhip);
+        
     }
 
     /**
@@ -732,28 +733,52 @@ public class App {
             }
         }
 
-        String typeStr = getStringInput("\nEnter Type: ");
-        Type moveType;
+        String typeStr = getStringInput("\nEnter Primary Type: ");
+        Type primaryType;
         try {
-            moveType = Type.valueOf(typeStr.toUpperCase());
-            if (moveType == Type.NONE) {
+            primaryType = Type.valueOf(typeStr.toUpperCase());
+            if (primaryType == Type.NONE) {
                 System.out.println("NONE is not a valid move type. Using NORMAL as default.");
-                moveType = Type.NORMAL;
+                primaryType = Type.NORMAL;
             }
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid type. Using NORMAL as default."); //catches invalid type, then assigns it to NORMAL
-            moveType = Type.NORMAL;
+            primaryType = Type.NORMAL;
+        }
+        
+        // Ask for secondary type (optional)
+        System.out.println("\nSecondary type is optional. Enter NONE or leave blank to skip.");
+        String secondTypeStr = getStringInput("Enter Secondary Type (optional): ");
+        Type secondaryType = Type.NONE;
+        
+        if (secondTypeStr != null && !secondTypeStr.trim().isEmpty() && !secondTypeStr.equalsIgnoreCase("none")) {
+            try {
+                secondaryType = Type.valueOf(secondTypeStr.toUpperCase());
+                if (secondaryType == primaryType) {
+                    System.out.println("Secondary type cannot be the same as primary type. Setting to NONE.");
+                    secondaryType = Type.NONE;
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid type. Secondary type will be NONE.");
+                secondaryType = Type.NONE;
+            }
         }
         
         System.out.println("\nKind options: Physical, Special, Status");
         String kind = getStringInput("Enter Kind: "); 
         
         int power = getIntInput("Enter Power (0 for status moves): ");
-        String accuracy = getStringInput("Enter Accuracy (e.g., 100%, 85%): ");
+        String accuracy = getStringInput("Enter Accuracy (e.g., 100, 85): ");
+        
+        // appends a "%" symbol when user enters accuracy
+        if (!accuracy.trim().isEmpty() && !accuracy.trim().endsWith("%")) {
+            accuracy = accuracy.trim() + "%";
+        }
+        
         int pp = getIntInput("Enter PP (Power Points): ");
 
         // creates the move and adds it to the list
-        Move move = new Move(id, name, description, classification, moveType, kind, power, accuracy, pp);
+        Move move = new Move(id, name, description, classification, primaryType, secondaryType, kind, power, accuracy, pp);
         moves.add(move);
         
         System.out.println("SUCCESS: Move added successfully!");
@@ -774,20 +799,26 @@ public class App {
 
         System.out.println("Found " + moves.size() + " moves:");
         System.out.println(
-                "-------------------------------------------------------------------------------------------------------------");
-        System.out.printf("| %-2s | %-15s | %-7s | %-8s | %-6s | %-8s | %-2s | %-40s |\n",
-                "ID", "Name", "Type", "Kind", "Power", "Accuracy", "PP", "Description");
+                "----------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("| %-2s | %-15s | %-7s | %-8s | %-8s | %-8s | %-6s | %-8s | %-2s | %-30s |\n",
+                "ID", "Name", "Class", "Type1", "Type2", "Kind", "Power", "Accuracy", "PP", "Description");
         System.out.println(
-                "-------------------------------------------------------------------------------------------------------------");
+                "----------------------------------------------------------------------------------------------------------------------");
 
         for (Move move : moves) {
+            // Get individual types
+            String type1Str = move.getType1().toString();
+            String type2Str = move.getType2() == Type.NONE ? "---" : move.getType2().toString();
+            
             // Use the full description without truncation
             String description = move.getDescription();
 
-            System.out.printf("| %-2d | %-15s | %-7s | %-8s | %-6d | %-8s | %-2d | %-40s |\n",
+            System.out.printf("| %-2d | %-15s | %-7s | %-8s | %-8s | %-8s | %-6d | %-8s | %-2d | %-30s |\n",
                     move.getId(),
                     move.getName(),
-                    move.getType(),
+                    move.getClassification(),
+                    type1Str,
+                    type2Str,
                     move.getKind(),
                     move.getPower(),
                     move.getAccuracy(),
@@ -795,8 +826,7 @@ public class App {
                     description);
         }
         System.out.println(
-                "-------------------------------------------------------------------------------------------------------------");
-
+                "----------------------------------------------------------------------------------------------------------------------");
         pressEnterToContinue();
     }
 
@@ -992,10 +1022,10 @@ public class App {
         
         
         if (category.equals("Evolution Stone")) {
-            System.out.println("+--------------------+-----------------+----------------+------------+----------------------------------------------------------------------+");
-            System.out.printf("| %-18s | %-15s | %-14s | %-10s | %-68s |\n",
-                    "Name", "Category", "Buy Price", "Sell Price", "Effect");
-            System.out.println("+--------------------+-----------------+----------------+------------+----------------------------------------------------------------------+");
+            System.out.println("+--------------------+-----------------+----------------+------------+-------------------------+----------------------------------------------------------------------+");
+            System.out.printf("| %-18s | %-15s | %-14s | %-10s | %-23s | %-68s |\n",
+                    "Name", "Category", "Buy Price", "Sell Price", "Description", "Effect");
+            System.out.println("+--------------------+-----------------+----------------+------------+-------------------------+----------------------------------------------------------------------+");
             
             // prints each evolution stone in the category
             for (Item item : categoryItems) {
@@ -1011,22 +1041,23 @@ public class App {
                 String sellPrice = "₱" + String.format("%,d", item.getSellingPrice());
 
                 // print evolution stone with adjusted column widths to match the screenshot
-                System.out.printf("| %-18s | %-15s | %-14s | %-10s | %-68s |\n",
+                System.out.printf("| %-18s | %-15s | %-14s | %-10s | %-23s | %-68s |\n",
                         item.getName(),
                         item.getCategory(),
                         buyPrice,
                         sellPrice,
+                        item.getDescription(),
                         item.getEffect());
             }
             
             // adds a line at the end of the evolution stones table
-            System.out.println("+--------------------+-----------------+----------------+------------+----------------------------------------------------------------------+");
+            System.out.println("+--------------------+-----------------+----------------+------------+-------------------------+----------------------------------------------------------------------+");
         } else {
             // regular formatting for other categories
-            System.out.println("+----------------------+---------------+------------+------------+-----------------------------------------------------------------+");
-            System.out.printf("| %-20s | %-13s | %-10s | %-10s | %-63s |\n",
-                    "Name", "Category", "Buy Price", "Sell Price", "Effect");
-            System.out.println("+----------------------+---------------+------------+------------+-----------------------------------------------------------------+");
+            System.out.println("+----------------------+---------------+------------+------------+--------------------------+--------------------------------------------+");
+            System.out.printf("| %-20s | %-13s | %-10s | %-10s | %-24s | %-42s |\n",
+                    "Name", "Category", "Buy Price", "Sell Price", "Description", "Effect");
+            System.out.println("+----------------------+---------------+------------+------------+--------------------------+--------------------------------------------+");
 
             // prints each item in the category
             for (Item item : categoryItems) {
@@ -1042,16 +1073,17 @@ public class App {
                 String sellPrice = "₱" + String.format("%,d", item.getSellingPrice());
 
                 // prints item information
-                System.out.printf("| %-20s | %-13s | %-10s | %-10s | %-63s |\n",
+                System.out.printf("| %-20s | %-13s | %-10s | %-10s | %-24s | %-42s |\n",
                         item.getName(),
                         item.getCategory(),
                         buyPrice,
                         sellPrice,
+                        item.getDescription(),
                         item.getEffect());
             }
             
             // line at the end of the category listings
-            System.out.println("+----------------------+---------------+------------+------------+-----------------------------------------------------------------+");
+            System.out.println("+----------------------+---------------+------------+------------+--------------------------+--------------------------------------------+");
         }
         
         System.out.println();

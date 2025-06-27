@@ -20,7 +20,8 @@ public class Move {
     private String name;
     private String description;
     private Classification classification;
-    private Type type;
+    private Type type1;
+    private Type type2;
     private String kind; // Physical, Special, Status
     private int power;
     private String accuracy;
@@ -33,7 +34,35 @@ public class Move {
      * @param name The move name
      * @param description The move description
      * @param classification The move classification (HM, TM, NORMAL)
-     * @param type The move type
+     * @param type1 The primary type
+     * @param type2 The secondary type (can be NONE)
+     * @param kind The move kind (Physical, Special, Status)
+     * @param power The move power
+     * @param accuracy The move accuracy
+     * @param pp The move PP (Power Points)
+     */
+    public Move(int id, String name, String description, Classification classification, 
+                Type type1, Type type2, String kind, int power, String accuracy, int pp) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.classification = classification;
+        this.type1 = type1;
+        this.type2 = type2;
+        this.kind = kind;
+        this.power = power;
+        this.accuracy = accuracy;
+        this.pp = pp;
+    }
+
+    /**
+     * Creates a new move with a single type.
+     * 
+     * @param id The move ID
+     * @param name The move name
+     * @param description The move description
+     * @param classification The move classification (HM, TM, NORMAL)
+     * @param type The primary type
      * @param kind The move kind (Physical, Special, Status)
      * @param power The move power
      * @param accuracy The move accuracy
@@ -41,15 +70,7 @@ public class Move {
      */
     public Move(int id, String name, String description, Classification classification, 
                 Type type, String kind, int power, String accuracy, int pp) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.classification = classification;
-        this.type = type;
-        this.kind = kind;
-        this.power = power;
-        this.accuracy = accuracy;
-        this.pp = pp;
+        this(id, name, description, classification, type, Type.NONE, kind, power, accuracy, pp);
     }
 
     /**
@@ -85,11 +106,27 @@ public class Move {
     }
 
     /**
-     * Gets the move type.
-     * @return The move type
+     * Gets the move primary type.
+     * @return The primary type
+     */
+    public Type getType1() {
+        return type1;
+    }
+
+    /**
+     * Gets the move secondary type.
+     * @return The secondary type
+     */
+    public Type getType2() {
+        return type2;
+    }
+
+    /**
+     * Gets the primary type (for backward compatibility).
+     * @return The primary type
      */
     public Type getType() {
-        return type;
+        return type1;
     }
 
     /**
@@ -132,7 +169,14 @@ public class Move {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("Move: %s (%s)\n", name, classification));
-        sb.append(String.format("Type: %s (%s)\n", type, kind));
+        
+        // Display type information
+        sb.append("Type: ").append(type1);
+        if (type2 != Type.NONE) {
+            sb.append("/").append(type2);
+        }
+        sb.append(String.format(" (%s)\n", kind));
+        
         sb.append(String.format("Power: %d | Accuracy: %s | PP: %d\n", power, accuracy, pp));
         sb.append(String.format("Description: %s\n", description));
         return sb.toString();
