@@ -357,7 +357,7 @@ public class App {
                     }
                 }
 
-                // asks for primary type
+                // 3. asks for primary type
                 Type type1 = null;
                 while (type1 == null) {
                     String typeStr = getStringInput("\nEnter Type 1: ");
@@ -599,8 +599,9 @@ public class App {
         String name = getStringInput("Enter Pokémon name to search: ");
         List<Pokemon> results = new ArrayList<>();
         
-        for (Pokemon pokemon : pokemons) {
-            if (pokemon.getName().toLowerCase().contains(name.toLowerCase())) {
+        for (Pokemon pokemon : pokemons) { // checks each Pokémon in the list
+            // checks if the Pokémon's name contains the search term (case-insensitive)
+            if (pokemon.getName().toLowerCase().contains(name.toLowerCase())) { 
                 results.add(pokemon); // adds matching pokémon to results
             }
         }
@@ -635,14 +636,14 @@ public class App {
         String typeStr = getStringInput("\nEnter Pokémon type to search: ");
         Type searchType;
         try {
-            searchType = Type.valueOf(typeStr.toUpperCase());
-        } catch (IllegalArgumentException e) {
+            searchType = Type.valueOf(typeStr.toUpperCase()); // converts the input to a Type enum which checks for valid type
+        } catch (IllegalArgumentException e) { // catches invalid type
             System.out.println("Invalid type. Search cancelled.");
             pressEnterToContinue();
             return;
         }
         
-        List<Pokemon> results = new ArrayList<>();
+        List<Pokemon> results = new ArrayList<>(); // initializes the results list
         for (Pokemon pokemon : pokemons) {
             if (pokemon.getType1() == searchType || pokemon.getType2() == searchType) {
                 results.add(pokemon); // adds matching pokémon to results
@@ -806,11 +807,9 @@ public class App {
                 "----------------------------------------------------------------------------------------------------------------------");
 
         for (Move move : moves) {
-            // Get individual types
             String type1Str = move.getType1().toString();
             String type2Str = move.getType2() == Type.NONE ? "---" : move.getType2().toString();
             
-            // Use the full description without truncation
             String description = move.getDescription();
 
             System.out.printf("| %-2d | %-15s | %-7s | %-8s | %-8s | %-8s | %-6d | %-8s | %-2d | %-30s |\n",
@@ -1020,16 +1019,41 @@ public class App {
             return;
         }
         
+        // this finds the maximum length of descriptions/effects
+        int maxDescLength = 0;
+        int maxEffectLength = 0;
         
+        for (Item item : categoryItems) {
+            maxDescLength = Math.max(maxDescLength, item.getDescription().length());
+            maxEffectLength = Math.max(maxEffectLength, item.getEffect().length());
+        }
+        
+        // makes sures that the descriptions and effects are at least 2 characters long
+        maxDescLength = Math.max(maxDescLength, "Description".length()) + 2;
+        maxEffectLength = Math.max(maxEffectLength, "Effect".length()) + 2;
+        
+        // this checks if the category is "Evolution Stone"
         if (category.equals("Evolution Stone")) {
-            System.out.println("+--------------------+-----------------+----------------+------------+-------------------------+----------------------------------------------------------------------+");
-            System.out.printf("| %-18s | %-15s | %-14s | %-10s | %-23s | %-68s |\n",
-                    "Name", "Category", "Buy Price", "Sell Price", "Description", "Effect");
-            System.out.println("+--------------------+-----------------+----------------+------------+-------------------------+----------------------------------------------------------------------+");
+            // header rows with column widths
+            String headerFormat = String.format("| %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds |\n", 
+                    19, 16, 13, 10, maxDescLength, maxEffectLength);
             
-            // prints each evolution stone in the category
+             // for aesthetic purposes ! !
+            String separatorLine = "+" + "-".repeat(21) + "+" + "-".repeat(18) + "+" + 
+                                  "-".repeat(15) + "+" + "-".repeat(12) + "+" + 
+                                  "-".repeat(maxDescLength + 2) + "+" + "-".repeat(maxEffectLength + 2) + "+";
+            
+            // prints the table header
+            System.out.println(separatorLine);
+            System.out.printf(headerFormat, "Name", "Category", "Buy Price", "Sell Price", "Description", "Effect");
+            System.out.println(separatorLine);
+            
+            // prints each evolution stone
+            String rowFormat = String.format("| %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds |\n",
+                    19, 16, 13, 10, maxDescLength, maxEffectLength);
+                    
             for (Item item : categoryItems) {
-                // format buying prices
+                // formats buying prices
                 String buyPrice;
                 if (item.getName().equals("Moon Stone")) {
                     buyPrice = "Not sold";
@@ -1037,11 +1061,11 @@ public class App {
                     buyPrice = "₱3,000-₱5,000";
                 }
                 
-                // formats selling price
+                //formats the selling price
                 String sellPrice = "₱" + String.format("%,d", item.getSellingPrice());
-
-                // print evolution stone with adjusted column widths to match the screenshot
-                System.out.printf("| %-18s | %-15s | %-14s | %-10s | %-23s | %-68s |\n",
+                
+                // prints the item with full description and effect
+                System.out.printf(rowFormat,
                         item.getName(),
                         item.getCategory(),
                         buyPrice,
@@ -1050,18 +1074,29 @@ public class App {
                         item.getEffect());
             }
             
-            // adds a line at the end of the evolution stones table
-            System.out.println("+--------------------+-----------------+----------------+------------+-------------------------+----------------------------------------------------------------------+");
+            // for aesthetic purposes ! !
+            System.out.println(separatorLine);
         } else {
-            // regular formatting for other categories
-            System.out.println("+----------------------+---------------+------------+------------+--------------------------+--------------------------------------------+");
-            System.out.printf("| %-20s | %-13s | %-10s | %-10s | %-24s | %-42s |\n",
-                    "Name", "Category", "Buy Price", "Sell Price", "Description", "Effect");
-            System.out.println("+----------------------+---------------+------------+------------+--------------------------+--------------------------------------------+");
-
-            // prints each item in the category
+            // Create header row with proper column widths for other categories
+            String headerFormat = String.format("| %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds |\n", 
+                    20, 13, 10, 10, maxDescLength, maxEffectLength);
+            
+            // for aesthetic purposes ! !
+            String separatorLine = "+" + "-".repeat(22) + "+" + "-".repeat(15) + "+" + 
+                                  "-".repeat(12) + "+" + "-".repeat(12) + "+" + 
+                                  "-".repeat(maxDescLength + 2) + "+" + "-".repeat(maxEffectLength + 2) + "+";
+            
+            // prints the table header
+            System.out.println(separatorLine);
+            System.out.printf(headerFormat, "Name", "Category", "Buy Price", "Sell Price", "Description", "Effect");
+            System.out.println(separatorLine);
+            
+            // Print each item
+            String rowFormat = String.format("| %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds |\n",
+                    20, 13, 10, 10, maxDescLength, maxEffectLength);
+                    
             for (Item item : categoryItems) {
-                // Format buying price
+                // format buying price
                 String buyPrice;
                 if (item.getBuyingPrice() == 0) {
                     buyPrice = "Not sold";
@@ -1069,11 +1104,11 @@ public class App {
                     buyPrice = "₱" + String.format("%,d", item.getBuyingPrice());
                 }
                 
-                // formats selling price
+                // format selling price
                 String sellPrice = "₱" + String.format("%,d", item.getSellingPrice());
-
-                // prints item information
-                System.out.printf("| %-20s | %-13s | %-10s | %-10s | %-24s | %-42s |\n",
+                
+                // print the item with full description and effect
+                System.out.printf(rowFormat,
                         item.getName(),
                         item.getCategory(),
                         buyPrice,
@@ -1082,8 +1117,8 @@ public class App {
                         item.getEffect());
             }
             
-            // line at the end of the category listings
-            System.out.println("+----------------------+---------------+------------+------------+--------------------------+--------------------------------------------+");
+            //adds a separator line at the end
+            System.out.println(separatorLine);
         }
         
         System.out.println();
